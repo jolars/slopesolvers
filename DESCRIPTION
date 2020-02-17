@@ -1,0 +1,21 @@
+Package: slopesolvers
+Title: A Suite of Solvers with Associated Functions for SLOPE
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Johan",
+           family = "Larsson",
+           role = c("aut", "cre"),
+           email = "johanlarsson@outlook.com",
+           comment = c(ORCID = "0000-0002-4029-5945"))
+Description: A set of solvers for SLOPE to compare performance with various
+    types of input and objectives.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.2
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo,
+    BH
+Imports: 
+    Rcpp
