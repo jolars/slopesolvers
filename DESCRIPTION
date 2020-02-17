@@ -19,3 +19,5 @@ LinkingTo:
     BH
 Imports: 
     Rcpp
+URL: https://github.com/jolars/slopesolvers
+BugReports: https://github.com/jolars/slopesolvers/issues
