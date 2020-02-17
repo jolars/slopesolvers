@@ -56,9 +56,10 @@ vec solve_subproblem(const vec& x,
   while (passes < max_passes) {
     ++passes;
 
-    gradient_z = gradient_x + H*(z - x);
+    vec zmx = z - x;
+    gradient_z = gradient_x + H*zmx;
 
-    g = dot(gradient_x, z - x) + 0.5*as_scalar((z - x).t()*H*(z - x));
+    g = dot(gradient_x, zmx) + 0.5*as_scalar(zmx.t()*H*zmx);
     h = dot(sort(abs(z.tail(p)), "descend"), lambda);
     f = g + h;
 
@@ -74,8 +75,9 @@ vec solve_subproblem(const vec& x,
       z1.tail(p) = prox(z1.tail(p), lambda*learning_rate);
 
       vec d = z1 - z;
+      vec z1mx = z1 - x;
 
-      g = dot(gradient_x, z1 - x) + 0.5*as_scalar((z1 - x).t()*H*(z1 - x));
+      g = dot(gradient_x, z1mx) + 0.5*as_scalar(z1mx.t()*H*z1mx);
       double q = g0 + dot(d, gradient_z) + (1.0/(2*learning_rate))*accu(square(d));
 
       if (q >= g*(1 - 1e-12))
@@ -86,9 +88,9 @@ vec solve_subproblem(const vec& x,
       checkUserInterrupt();
     }
 
-    t = 0.5*(1 + std::sqrt(1 + 4*t0*t0));
+    t = 0.5*(1.0 + std::sqrt(1.0 + 4.0*t0*t0));
 
-    z = z1 + (t0 - 1)/t * (z1 - z0);
+    z = z1 + (t0 - 1.0)/t * (z1 - z0);
     z0 = z;
     t0 = t;
 
@@ -113,7 +115,7 @@ List pn_binom(arma::mat A,
               arma::vec lambda,
               arma::uword max_passes,
               const double opt,
-              const double opt_tol)
+              const double opt_tol = 1e-4)
 {
   uword p = A.n_cols;
   uword n = A.n_rows;
@@ -136,7 +138,6 @@ List pn_binom(arma::mat A,
 
   vec lin_pred(n, fill::zeros);
 
-  double f_old = 0;
   double df = 0;
 
   // newton parameters
@@ -149,25 +150,13 @@ List pn_binom(arma::mat A,
   double g_x = objective(b, lin_pred);
   vec grad_g_x = gradient(A, b, lin_pred);
   vec grad_g_old(grad_g_x);
-  mat hess_x = hessian(A, b, lin_pred);
+  mat hess_g_x = hessian(A, b, lin_pred);
   double h_x = dot(sort(abs(x.tail(p)), "descend"), lambda);
   double f_x = g_x + h_x;
-
-  vec x_prox = x - grad_g_x;
-  x_prox.tail(p) = prox(x.tail(p), lambda);
-  double optim = norm(x_prox - x, "inf");
-  double optim_old = optim;
 
   double f_y, g_y, h_y = 0;
   vec grad_g_y(p+1, fill::zeros);
   mat hess_g_y(p+1, p+1, fill::zeros);
-
-  lin_pred = A*x;
-  g_x = objective(b, lin_pred);
-  grad_g_x = gradient(A, b, lin_pred);
-  hess_x = hessian(A, b, lin_pred);
-  h_x = dot(sort(abs(x.tail(p)), "descend"), lambda);
-  f_x = g_x + h_x;
 
   uword passes = 0;
 
@@ -178,27 +167,10 @@ List pn_binom(arma::mat A,
     if (std::abs((f_x - opt)/opt) <= opt_tol)
       break;
 
-    x_prox = solve_subproblem(x, grad_g_x, hess_x, lambda);
-
-    Rcout << std::endl;
-    x.print();
-    Rcout << std::endl;
-    x_prox.print();
-    Rcout << std::endl;
-    grad_g_x.print();
-
-    // Rcout << "f: " << f_x << ", h: " << h_x << ", g: " << g_x << std::endl;
-
-    vec v = x_prox - x;
-    x_old = x;
-    f_old = f_x;
-    grad_g_old = grad_g_x;
-    optim_old = optim;
+    vec v = solve_subproblem(x, grad_g_x, hess_g_x, lambda) - x;
 
     // linesearch
-
     double t = 1;
-    vec xpv = x + v;
     double grad_g_x_v = dot(grad_g_x, v);
 
     while (true) {
@@ -233,19 +205,12 @@ List pn_binom(arma::mat A,
       //     t *= beta;
       // }
       checkUserInterrupt();
-
     }
 
-    // Rcout << "t: " << t << std::endl;
-
-    f_x = f_y;
-    h_x = h_y;
-    g_x = g_y;
-    x = y;
-    grad_g_x = grad_g_y;
-    hess_x = hess_g_y;
-    x_prox = x - grad_g_x;
-    x_prox.tail(p) = prox(x.tail(p), lambda);
+    std::swap(f_x, f_y);
+    std::swap(x, y);
+    std::swap(grad_g_x, grad_g_y);
+    std::swap(hess_g_x, hess_g_y);
 
     ++passes;
   }

@@ -19,7 +19,7 @@ List fista_binom(arma::mat x,
                  arma::vec lambda,
                  arma::uword max_passes,
                  const double opt,
-                 const opt_tol = 1e-4)
+                 const double opt_tol = 1e-4)
 {
   uword p = x.n_cols;
   uword n = x.n_rows;

@@ -17,7 +17,12 @@ LinkingTo:
     Rcpp,
     RcppArmadillo,
     BH
-Imports: 
+Imports:
+    owl,
     Rcpp
 URL: https://github.com/jolars/slopesolvers
 BugReports: https://github.com/jolars/slopesolvers/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

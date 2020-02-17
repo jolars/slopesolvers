@@ -1,0 +1,59 @@
+---
+title: "Logistic regression"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Logistic regression}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(slopesolvers)
+library(owl)
+```
+
+
+```{r}
+n <- 100
+p <- 2
+xy <- owl:::randomProblem(n, p, response = "binomial")
+x <- scale(xy$x)
+y <- ifelse(xy$y, -1, 1)
+
+fit <- owl(x, y, scale = FALSE, center = FALSE, family = "binomial")
+
+i <- 20
+beta <- coef(fit)[, i]
+xbeta <- cbind(1, x) %*% beta
+lambda <- fit$sigma[i]*fit$lambda*nrow(x)
+grad <- t(x) %*% (-y/(1 + exp(y * xbeta)))
+
+g <- sum(log(1 + exp(-y * xbeta)))
+h <- sum(sort(abs(grad), decreasing = TRUE)*lambda)
+f <- g + h
+
+max_passes <- 1000
+
+admm_fit <- admm_binom(x, y, lambda, max_passes, f)
+pn_fit <- pn_binom(x, y, lambda, max_passes, f)
+
+d <- data.frame(
+  solver = rep(c("ADMM", "PN"), 
+               times = c(length(admm_fit$loss), length(pn_fit$loss))),
+  loss = c(admm_fit$loss, pn_fit$loss),
+  time = c(admm_fit$time, pn_fit$time)
+)
+
+library(lattice)
+library(directlabels)
+pl <- xyplot(loss ~ time, group = solver, data = d, type = "l")
+direct.label(pl, "angled.boxes")
+```
+

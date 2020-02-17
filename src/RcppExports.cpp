@@ -2,26 +2,10 @@
 // Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #include <RcppArmadillo.h>
-#include <RcppEigen.h>
 #include <Rcpp.h>
 
 using namespace Rcpp;
 
-// admm
-List admm(arma::mat x, arma::vec y, arma::vec lambda, arma::uword max_passes, const double opt);
-RcppExport SEXP _slopesolvers_admm(SEXP xSEXP, SEXP ySEXP, SEXP lambdaSEXP, SEXP max_passesSEXP, SEXP optSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type lambda(lambdaSEXP);
-    Rcpp::traits::input_parameter< arma::uword >::type max_passes(max_passesSEXP);
-    Rcpp::traits::input_parameter< const double >::type opt(optSEXP);
-    rcpp_result_gen = Rcpp::wrap(admm(x, y, lambda, max_passes, opt));
-    return rcpp_result_gen;
-END_RCPP
-}
 // admm_binom
 List admm_binom(arma::mat x, arma::vec y, arma::vec lambda, arma::uword max_passes, const double opt, const double opt_tol);
 RcppExport SEXP _slopesolvers_admm_binom(SEXP xSEXP, SEXP ySEXP, SEXP lambdaSEXP, SEXP max_passesSEXP, SEXP optSEXP, SEXP opt_tolSEXP) {
@@ -38,18 +22,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// admmEigen
-List admmEigen(Eigen::MatrixXd x, Eigen::VectorXd y, Eigen::ArrayXd lambda, size_t max_passes, const double opt);
-RcppExport SEXP _slopesolvers_admmEigen(SEXP xSEXP, SEXP ySEXP, SEXP lambdaSEXP, SEXP max_passesSEXP, SEXP optSEXP) {
+// admm_ols
+List admm_ols(arma::mat x, arma::vec y, arma::vec lambda, arma::uword max_passes, const double opt, const double opt_tol);
+RcppExport SEXP _slopesolvers_admm_ols(SEXP xSEXP, SEXP ySEXP, SEXP lambdaSEXP, SEXP max_passesSEXP, SEXP optSEXP, SEXP opt_tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type x(xSEXP);
-    Rcpp::traits::input_parameter< Eigen::VectorXd >::type y(ySEXP);
-    Rcpp::traits::input_parameter< Eigen::ArrayXd >::type lambda(lambdaSEXP);
-    Rcpp::traits::input_parameter< size_t >::type max_passes(max_passesSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< arma::uword >::type max_passes(max_passesSEXP);
     Rcpp::traits::input_parameter< const double >::type opt(optSEXP);
-    rcpp_result_gen = Rcpp::wrap(admmEigen(x, y, lambda, max_passes, opt));
+    Rcpp::traits::input_parameter< const double >::type opt_tol(opt_tolSEXP);
+    rcpp_result_gen = Rcpp::wrap(admm_ols(x, y, lambda, max_passes, opt, opt_tol));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -98,9 +83,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// fista_backtracking
-List fista_backtracking(arma::mat x, arma::vec y, arma::vec lambda, arma::uword max_passes, double epsilon, std::string type, double opt);
-RcppExport SEXP _slopesolvers_fista_backtracking(SEXP xSEXP, SEXP ySEXP, SEXP lambdaSEXP, SEXP max_passesSEXP, SEXP epsilonSEXP, SEXP typeSEXP, SEXP optSEXP) {
+// fista_binom
+List fista_binom(arma::mat x, arma::vec y, arma::vec lambda, arma::uword max_passes, const double opt, const double opt_tol);
+RcppExport SEXP _slopesolvers_fista_binom(SEXP xSEXP, SEXP ySEXP, SEXP lambdaSEXP, SEXP max_passesSEXP, SEXP optSEXP, SEXP opt_tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -108,16 +93,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
     Rcpp::traits::input_parameter< arma::vec >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< arma::uword >::type max_passes(max_passesSEXP);
-    Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
-    Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
-    Rcpp::traits::input_parameter< double >::type opt(optSEXP);
-    rcpp_result_gen = Rcpp::wrap(fista_backtracking(x, y, lambda, max_passes, epsilon, type, opt));
+    Rcpp::traits::input_parameter< const double >::type opt(optSEXP);
+    Rcpp::traits::input_parameter< const double >::type opt_tol(opt_tolSEXP);
+    rcpp_result_gen = Rcpp::wrap(fista_binom(x, y, lambda, max_passes, opt, opt_tol));
     return rcpp_result_gen;
 END_RCPP
 }
-// fista_binom
-List fista_binom(arma::mat x, arma::vec y, arma::vec lambda, arma::uword max_passes, double opt);
-RcppExport SEXP _slopesolvers_fista_binom(SEXP xSEXP, SEXP ySEXP, SEXP lambdaSEXP, SEXP max_passesSEXP, SEXP optSEXP) {
+// fista_ols
+List fista_ols(arma::mat x, arma::vec y, arma::vec lambda, arma::uword max_passes, const double opt, const double opt_tol);
+RcppExport SEXP _slopesolvers_fista_ols(SEXP xSEXP, SEXP ySEXP, SEXP lambdaSEXP, SEXP max_passesSEXP, SEXP optSEXP, SEXP opt_tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -125,14 +109,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::vec >::type y(ySEXP);
     Rcpp::traits::input_parameter< arma::vec >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< arma::uword >::type max_passes(max_passesSEXP);
-    Rcpp::traits::input_parameter< double >::type opt(optSEXP);
-    rcpp_result_gen = Rcpp::wrap(fista_binom(x, y, lambda, max_passes, opt));
+    Rcpp::traits::input_parameter< const double >::type opt(optSEXP);
+    Rcpp::traits::input_parameter< const double >::type opt_tol(opt_tolSEXP);
+    rcpp_result_gen = Rcpp::wrap(fista_ols(x, y, lambda, max_passes, opt, opt_tol));
     return rcpp_result_gen;
 END_RCPP
 }
 // pn_binom
-List pn_binom(arma::mat A, arma::vec b, arma::vec lambda, arma::uword max_passes, const double opt);
-RcppExport SEXP _slopesolvers_pn_binom(SEXP ASEXP, SEXP bSEXP, SEXP lambdaSEXP, SEXP max_passesSEXP, SEXP optSEXP) {
+List pn_binom(arma::mat A, arma::vec b, arma::vec lambda, arma::uword max_passes, const double opt, const double opt_tol);
+RcppExport SEXP _slopesolvers_pn_binom(SEXP ASEXP, SEXP bSEXP, SEXP lambdaSEXP, SEXP max_passesSEXP, SEXP optSEXP, SEXP opt_tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -141,7 +126,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::vec >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< arma::uword >::type max_passes(max_passesSEXP);
     Rcpp::traits::input_parameter< const double >::type opt(optSEXP);
-    rcpp_result_gen = Rcpp::wrap(pn_binom(A, b, lambda, max_passes, opt));
+    Rcpp::traits::input_parameter< const double >::type opt_tol(opt_tolSEXP);
+    rcpp_result_gen = Rcpp::wrap(pn_binom(A, b, lambda, max_passes, opt, opt_tol));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -163,15 +149,14 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_slopesolvers_admm", (DL_FUNC) &_slopesolvers_admm, 5},
     {"_slopesolvers_admm_binom", (DL_FUNC) &_slopesolvers_admm_binom, 6},
-    {"_slopesolvers_admmEigen", (DL_FUNC) &_slopesolvers_admmEigen, 5},
+    {"_slopesolvers_admm_ols", (DL_FUNC) &_slopesolvers_admm_ols, 6},
     {"_slopesolvers_amp", (DL_FUNC) &_slopesolvers_amp, 5},
     {"_slopesolvers_cd", (DL_FUNC) &_slopesolvers_cd, 4},
     {"_slopesolvers_drs", (DL_FUNC) &_slopesolvers_drs, 6},
-    {"_slopesolvers_fista_backtracking", (DL_FUNC) &_slopesolvers_fista_backtracking, 7},
-    {"_slopesolvers_fista_binom", (DL_FUNC) &_slopesolvers_fista_binom, 5},
-    {"_slopesolvers_pn_binom", (DL_FUNC) &_slopesolvers_pn_binom, 5},
+    {"_slopesolvers_fista_binom", (DL_FUNC) &_slopesolvers_fista_binom, 6},
+    {"_slopesolvers_fista_ols", (DL_FUNC) &_slopesolvers_fista_ols, 6},
+    {"_slopesolvers_pn_binom", (DL_FUNC) &_slopesolvers_pn_binom, 6},
     {"_slopesolvers_sparsa", (DL_FUNC) &_slopesolvers_sparsa, 6},
     {NULL, NULL, 0}
 };
